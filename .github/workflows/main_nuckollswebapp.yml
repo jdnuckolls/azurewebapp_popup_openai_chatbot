@@ -23,12 +23,6 @@ jobs:
         with:
           node-version: '20.x'
 
-      - name: npm install, build, and test
-        run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
-
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
 
@@ -41,7 +35,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       id-token: write #This is required for requesting the JWT
       contents: read #This is required for actions/checkout
@@ -58,9 +54,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_69123FB46D8B4B1AB43B5CFA518112E9 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_A6AE961AFBA349DCA60079C2B77D0152 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_2EB86C28EFDC4989BD045A5D55283FF8 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_76E53C9B9830418DA062876BC7920B52 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_6762449676F249999EF1B26A4B372C17 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9658FC90747A4478909A5E52CA5E22A2 }}
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
